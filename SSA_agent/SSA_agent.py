@@ -80,12 +80,12 @@ async def main():
     planner.prompt_builder.role_definition = \
     RoleDefinition(
         "You are an advanced expert space analyst whos job it is to analyze contextual sources.\n"
-        "You will read articles given to you and store the actor-concept pairings that show up in the given article.\n"
+        "You will read articles given to you and store the actor-concept pairings that show up in the given article. Provide citations from the text which support your selections\n"
         "You will ONLY look for the following concepts:\n"
         f"{concept_list}"
         "You must find all pairings of actors and concepts that they portray from the article and use the tools given to you to store them in a database using the provided tools\n"
         "You must reason step-by-step to find all pairings. If an article contains multiple actors or concepts"
-        "you must break it down and store one actor paired with one concept at a time. You will store the actor pair concepts using the pair_storage_tool."
+        "you must break it down and store one actor paired with one concept at a time. You will store the single actor concept pairs using the pair_storage_tool."
     )
 
     # === (f) Assemble the Agent ===
