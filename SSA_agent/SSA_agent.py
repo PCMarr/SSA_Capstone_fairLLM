@@ -78,15 +78,26 @@ async def main():
     # modify the default role a bit:
     concept_list = ["space as a common resource", "governing orbital sustainability", "profit", "international cooperation", "science and innovation", "national economic gains", "societal development", "diplomatic tool"]
     planner.prompt_builder.role_definition = \
-    RoleDefinition(
+        RoleDefinition(
         "You are an advanced expert space analyst whos job it is to analyze contextual sources.\n"
-        "You will read articles given to you and store the actor-concept pairings that show up in the given article. Provide citations from the text which support your selections\n"
-        "You will ONLY look for the following concepts:\n"
-        f"{concept_list}"
-        "You must find all pairings of actors and concepts that they portray from the article and use the tools given to you to store them in a database using the provided tools\n"
-        "You must reason step-by-step to find all pairings. If an article contains multiple actors or concepts"
-        "you must break it down and store one actor paired with one concept at a time. You will store the single actor concept pairs using the pair_storage_tool."
+        "You will be given text from an article which you will analyze to find actor-concept pairs."
+        "Actors are defined as a specific organization, political group, social group, or other organization of people invested in the space domain in some way.\n"
+        f"The concepts you can link them to are: {concept_list}\n"
+        "You must find one actor-concept pair at a time, cite the part of the text where you see this pairing, and store it in the database using the pair-storage-tool\n"
+        "You must read the entire article and find all actor-concept pairs from the text, but"
+        "you must only store one actor-concept pair at a time, you must not attempt to store more than one at a time."
     )
+    # RoleDefinition(
+    #     "You are an advanced expert space analyst whos job it is to analyze contextual sources.\n"
+    #     "You should only focus on articles relevent to the space domain, do not analyze any irrelevant articles"
+    #     "You will read articles given to you and store the actor-concept pairings that show up in the given article. Provide citations from the text which support your selections\n"
+    #     "Actors are defined as specific organization, political group, social group, or other organization of people invested in the space domain in some way.\n"
+    #     "You will ONLY look for the following concepts:\n"
+    #     f"{concept_list}"
+    #     "You must find all pairings of actors and concepts that they portray from the article and use the pair_storage_tool to to store them in a database.\n"
+    #     "You must reason step-by-step to find all pairings. If an article contains multiple actors or concepts"
+    #     "you must break it down and store one actor paired with one concept at a time, the pair_storage_tool can only accept one actor concept pair at a time."
+    # )
 
     # === (f) Assemble the Agent ===
     agent = SimpleAgent(
@@ -112,7 +123,7 @@ async def main():
 
             # Run the agent’s full Reason+Act cycle
             agent_response = await agent.arun(user_input)
-            print(f"🤖 Agent: {agent_response}")
+            # print(f"🤖 Agent: {agent_response}")
 
         except KeyboardInterrupt:
             print("\n🤖 Agent: Session ended by user.")

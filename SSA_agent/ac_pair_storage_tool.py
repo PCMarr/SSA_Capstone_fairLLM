@@ -40,7 +40,7 @@ class PairStorageTool(AbstractTool):
         with open("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/actor_concept.json", "w") as file:
             json_str = json.dumps(json_obj)
             file.write(json_str)
-        return(f"Successfully stored ({pair[0]}, {pair[1]})\nCurrent actors: {list(json_obj.keys())}")
+        return(f"Successfully stored ({pair[0]}, {pair[1]})")
     
 if __name__ == "__main__":
     tool = PairStorageTool()
