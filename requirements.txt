@@ -6,3 +6,4 @@ faiss-cpu>=1.7.0 # for the FAISS demo
 seaborn>=0.13.0 # for the graphing demo
 fair-llm>=0.1 # fair package
 pytest>=8.0.0
+trafilatura>=2.0.0 # parses HTML sites
