@@ -47,11 +47,11 @@ async def main():
     print("🔧 Initializing the SSA agent...")
    
     # === (a) Brain: Language Model ===
-    #llm = HuggingFaceAdapter("google/gemma-2-27b-it", auth_token='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', quantized=False, torch_dtype=torch.float32)
+    
     settings.api_keys.openai_api_key = os.getenv("OPENAI_API_KEY")
     llm = OpenAIAdapter(
         api_key=settings.api_keys.openai_api_key,
-        model_name="gpt-5.1-2025-11-13"
+        model_name="gpt-4.1-2025-04-14"
     )
     # === (b) Toolbelt: Register both calculator and calculus tools ===
     tool_registry = ToolRegistry()
@@ -77,11 +77,12 @@ async def main():
 
     # modify the default role a bit:
     concept_list = ["space as a common resource", "governing orbital sustainability", "profit", "international cooperation", "science and innovation", "national economic gains", "societal development", "diplomatic tool"]
+    actor_list = ["United States","China","Russia","France","UK","NATO", "United Nations","SpaceX"]
     planner.prompt_builder.role_definition = \
         RoleDefinition(
         "You are an advanced expert space analyst whos job it is to analyze contextual sources.\n"
         "You will be given text from an article which you will analyze to find actor-concept pairs."
-        "Actors are defined as a specific organization, political group, social group, or other organization of people invested in the space domain in some way.\n"
+        f"The actors you are analyzing are: {actor_list}\n"
         f"The concepts you can link them to are: {concept_list}\n"
         "You must find one actor-concept pair at a time, cite the part of the text where you see this pairing, and store it in the database using the pair-storage-tool\n"
         "You must read the entire article and find all actor-concept pairs from the text, but"
@@ -114,16 +115,16 @@ async def main():
     with open("SSA_agent/source_collection/sources.json", "r") as fp:
         sources_json = json.load(fp)
 
-    
-    for i in range(len(sources_json)):
+    num_sources = len(sources_json)
+    for i in range(num_sources):
         title = sources_json[i]["title"]
-        print(f"\n\nNext source: {title} ")
         try:
             user_input = sources_json[i]["text"]
-
-            # Run the agent’s full Reason+Act cycle
-            agent_response = await agent.arun(user_input)
-            # print(f"🤖 Agent: {agent_response}")
+            if(user_input):
+                print(f"\n\n({i}/{num_sources}) Next source: {title} ")
+                # Run the agent’s full Reason+Act cycle
+                agent_response = await agent.arun(user_input)
+                # print(f"🤖 Agent: {agent_response}")
 
         except KeyboardInterrupt:
             print("\n🤖 Agent: Session ended by user.")

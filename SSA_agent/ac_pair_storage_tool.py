@@ -16,9 +16,13 @@ class PairStorageTool(AbstractTool):
         Takes actor concept tuple, adds it to a growing JSON file
         """
         concept_list = ["space as a common resource", "governing orbital sustainability", "profit", "international cooperation", "science and innovation", "national economic gains", "societal development", "diplomatic tool"]
+        actor_list =  ["United States","China","Russia","France","UK","NATO", "United Nations","SpaceX"]
         pair = expression[1:]
         pair = pair[:-1]
         pair = pair.split(", ")
+        
+        if(pair[0] not in actor_list):
+            raise Exception(f"{pair[0]} is not one of the accepted actors")
 
         if(pair[1] not in concept_list):
             raise Exception(f"{pair[1]} is not one of the accepted concepts")
