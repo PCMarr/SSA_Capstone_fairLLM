@@ -61,6 +61,5 @@ class PairStorageTool(AbstractTool):
 if __name__ == "__main__":
     tool = PairStorageTool()
 
-    tool.use("(nasa, space as a common resource)")
-    tool.use("(china, space as a common resource)")
-    print(tool.use("(china, governing orbital sustainability)"))
+    tool.use("(Russia, space as a common resource)")
+    tool.use("(China, space as a common resource)")
