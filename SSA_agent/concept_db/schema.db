@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS sources(
     source_id INTEGER PRIMARY KEY ASC,
-    title TEXT,
+    title TEXT NOT NULL,
+    content TEXT,
     source TEXT,
     date TEXT,
     link TEXT
