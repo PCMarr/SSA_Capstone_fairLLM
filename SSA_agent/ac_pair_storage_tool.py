@@ -28,15 +28,22 @@ class PairStorageTool(AbstractTool):
             raise Exception(f"{pair[1]} is not one of the accepted concepts")
         
         #put actor concept pairs into database https://docs.python.org/3/library/sqlite3.html
-        connection = sqlite3.connect("actor_concept.db")
-        cursor = connection.cursor
+        connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+        cursor = connection.cursor()
 
-        cursor.execute("CREATE TABLE pairs(actor, concept, timestamp)")
+        cursor.execute("SELECT actor_id FROM actors WHERE actor=?", (pair[0],))
+        actor_id = cursor.fetchone()[0]
 
-        cursor.execute("""
-                       INSERT INTO pairs VALUES
-                       (pair[0], pair[1], 02-13-26))
-                       """)
+        cursor.execute("SELECT concept_id FROM concepts WHERE concept=?", (pair[1],))
+        concept_id = cursor.fetchone()[0]
+
+        source_id = 1
+
+        cursor.execute("INSERT INTO pairs (actor_id, concept_id, source_id) VALUES (?, ?, ?)",
+                       (actor_id, concept_id, source_id))
+        
+        connection.commit()
+        connection.close()
 
 
         # with open("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/actor_concept.json", "r") as file:
@@ -61,5 +68,41 @@ class PairStorageTool(AbstractTool):
 if __name__ == "__main__":
     tool = PairStorageTool()
 
+    connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+    cursor = connection.cursor()
+
+    cursor.execute("""
+                    INSERT INTO actors (actor) VALUES
+                    ("United States"),
+                    ("China"),
+                    ("Russia"),
+                    ("France"),
+                    ("UK"),
+                    ("NATO"),
+                    ("United Nations"),
+                    ("SpaceX")
+                    """)
+    
+    cursor.execute("""
+                    INSERT INTO concepts (concept) VALUES
+                    ("space as a common resource"),
+                    ("governing orbital sustainability"),
+                    ("profit"), 
+                    ("international cooperation"),
+                    ("science and innovation"),
+                    ("national economic gains"),
+                    ("societal development"),
+                    ("diplomatic tool")
+                    """)
+    
+    connection.commit()
+    
+    connection.close()
+
     tool.use("(Russia, space as a common resource)")
     tool.use("(China, space as a common resource)")
+
+    connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+    cursor = connection.cursor()
+
+    cursor.execute("DELETE FROM pairs")

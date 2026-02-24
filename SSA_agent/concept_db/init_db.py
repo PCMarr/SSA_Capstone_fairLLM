@@ -1,7 +1,7 @@
 import sqlite3
 
 if __name__ == "__main__":
-    db_file = "/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/concept_db/schema.db"
+    db_file = "SSA_agent/concept_db/schema.db"
     conn = sqlite3.connect("SSA_agent/concept_db/pair.db")
     conn.execute("PRAGMA foreign_keys = ON")
 
