@@ -15,6 +15,7 @@ class PairStorageTool(AbstractTool):
         """
         Takes actor concept tuple, adds it to a growing database
         """
+        #(actor, concept, source id)
         concept_list = ["space as a common resource", "governing orbital sustainability", "profit", "international cooperation", "science and innovation", "national economic gains", "societal development", "diplomatic tool"]
         actor_list =  ["United States","China","Russia","France","UK","NATO", "United Nations","SpaceX"]
         pair = expression[1:]

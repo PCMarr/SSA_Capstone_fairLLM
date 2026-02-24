@@ -1,5 +1,13 @@
-import json
-with open("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/actor_concept.json", "r") as fp:
-    data = json.load(fp)
+import sqlite3
 
-print(len(data))
+connection = sqlite3.connect("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/concept_db/pair.db")
+cursor = connection.cursor()
+
+
+
+cursor.execute("""
+            SELECT COUNT(title) FROM sources;
+            """)
+
+rows = cursor.fetchall()
+print(rows)

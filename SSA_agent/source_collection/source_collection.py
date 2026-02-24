@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import trafilatura
+import sqlite3
 # load environment variables from .env
 from dotenv import load_dotenv
 load_dotenv()
@@ -61,28 +62,32 @@ def serper_search(watchlist):
     return news
 
 def main():
-    sources_database = []
-    with open("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/source_collection/sources.json", "r") as fp:
-        sources_database = json.load(fp)
     
+
     for list in WATCHLISTS:
+        connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+        cursor = connection.cursor()
         print(f"Gathering sources about {list}")
         sources = serper_search(list)
         for source in sources:
             source["text"] = fetch_article_text(source["link"])
-            entry = {
-                "title": source["title"],
-                "source_name":  source["source"],
-                "category": "News",
-                "published": source["date"],
-                "text": source["text"],
-                "link": source["link"]
-            }
-            sources_database.append(entry)
-        print(f"Current source count: {len(sources_database)}")
+            # entry = {
+            #     "title": source["title"],
+            #     "source_name":  source["source"],
+            #     "category": "News",
+            #     "published": source["date"],
+            #     "text": source["text"],
+            #     "link": source["link"]
+            # }
+            print(f"inserting {source["title"]}")
+            cursor.execute("""
+            INSERT INTO sources (title, content, source, date, link) 
+            VALUES (?, ?, ?, ?, ?)            
+            """, (source["title"], source["text"], source["source"], source["date"], source["link"]))
+            connection.commit()
+        cursor.close()
 
-    with open("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agent/source_collection/sources.json", "w") as fp:
-        json.dump(sources_database, fp)
-    
+        connection.close()
+
 if __name__ == "__main__":
     main()
