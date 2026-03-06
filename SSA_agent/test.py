@@ -6,7 +6,7 @@ cursor = connection.cursor()
 
 
 cursor.execute("""
-            SELECT COUNT(title) FROM sources;
+            SELECT date FROM sources;
             """)
 
 rows = cursor.fetchall()

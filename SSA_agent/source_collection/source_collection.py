@@ -3,6 +3,8 @@ import json
 import os
 import trafilatura
 import sqlite3
+from datetime import *; from dateutil.relativedelta import *
+
 # load environment variables from .env
 from dotenv import load_dotenv
 load_dotenv()
@@ -35,6 +37,7 @@ WATCHLISTS = {
         'SSA', 'STM', 'tracking', 'catalog', 'space traffic', 'conjunction assessment', 'COLA', 'space situational awareness'
     ],
 }
+
 def join_watchlist(name):
     terms = WATCHLISTS.get(name, [])
     return ' OR '.join(sorted(set(terms)))
@@ -61,16 +64,40 @@ def serper_search(watchlist):
             return(e)
     return news
 
+def date_offset(offset_str):
+    tokens = offset_str.split(" ")
+    # check if date is already correctly formatted
+    if(tokens[-1] != "ago"):
+        source_date = datetime.strptime(offset_str, "%b %d, %Y")
+        return str(source_date)
+    
+    Today = datetime.now()
+    gap = -int(tokens[0])
+    if(tokens[1] in ["month", "months"]):
+        delta = relativedelta(months=gap)
+    if(tokens[1] in ["hour", "hours"]):
+        delta = relativedelta(hours=gap)
+    if(tokens[1] in ["week", "weeks"]):
+        delta = relativedelta(weeks=gap)
+    if(tokens[1] in ["day", "days"]):
+        delta = relativedelta(days=gap)
+
+    source_date = Today + delta
+    return str(source_date)
+
+
 def main():
     
 
     for list in WATCHLISTS:
         connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+        connection.execute("PRAGMA foreign_keys = ON")
         cursor = connection.cursor()
         print(f"Gathering sources about {list}")
         sources = serper_search(list)
         for source in sources:
             source["text"] = fetch_article_text(source["link"])
+            source["date"] = date_offset(source["date"])
             # entry = {
             #     "title": source["title"],
             #     "source_name":  source["source"],
@@ -80,12 +107,14 @@ def main():
             #     "link": source["link"]
             # }
             print(f"inserting {source["title"]}")
-            cursor.execute("""
-            INSERT INTO sources (title, content, source, date, link) 
-            VALUES (?, ?, ?, ?, ?)            
-            """, (source["title"], source["text"], source["source"], source["date"], source["link"]))
-            connection.commit()
-        cursor.close()
+            try:
+                cursor.execute("""
+                INSERT INTO sources (title, content, source, date, link) 
+                VALUES (?, ?, ?, ?, ?)            
+                """, (source["title"], source["text"], source["source"], source["date"], source["link"]))
+                connection.commit()
+            except:
+                pass
 
         connection.close()
 

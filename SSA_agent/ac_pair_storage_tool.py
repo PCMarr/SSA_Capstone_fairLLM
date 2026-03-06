@@ -15,7 +15,7 @@ class PairStorageTool(AbstractTool):
         """
         Takes actor concept tuple, adds it to a growing database
         """
-        #(actor, concept, source id)
+        #(actor, concept)
         concept_list = ["space as a common resource", "governing orbital sustainability", "profit", "international cooperation", "science and innovation", "national economic gains", "societal development", "diplomatic tool"]
         actor_list =  ["United States","China","Russia","France","UK","NATO", "United Nations","SpaceX"]
         pair = expression[1:]
@@ -38,7 +38,9 @@ class PairStorageTool(AbstractTool):
         cursor.execute("SELECT concept_id FROM concepts WHERE concept=?", (pair[1],))
         concept_id = cursor.fetchone()[0]
 
-        source_id = 1
+        with open("temp.json", "r") as fp:
+            source_id = fp.read()
+
 
         cursor.execute("INSERT INTO pairs (actor_id, concept_id, source_id) VALUES (?, ?, ?)",
                        (actor_id, concept_id, source_id))

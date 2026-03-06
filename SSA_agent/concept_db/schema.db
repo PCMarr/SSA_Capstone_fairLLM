@@ -4,17 +4,17 @@ CREATE TABLE IF NOT EXISTS sources(
     content TEXT,
     source TEXT,
     date TEXT,
-    link TEXT
+    link TEXT UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS actors(
     actor_id INTEGER PRIMARY KEY ASC,
-    actor TEXT NOT NULL
+    actor TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS concepts(
     concept_id INTEGER PRIMARY KEY ASC,
-    concept TEXT NOT NULL
+    concept TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS pairs(
@@ -35,3 +35,23 @@ CREATE TABLE IF NOT EXISTS pairs(
         ON UPDATE cascade
         ON DELETE cascade
 );
+
+INSERT INTO actors (actor) VALUES
+                    ("United States"),
+                    ("China"),
+                    ("Russia"),
+                    ("France"),
+                    ("UK"),
+                    ("NATO"),
+                    ("United Nations"),
+                    ("SpaceX");
+
+INSERT INTO concepts (concept) VALUES
+                    ("space as a common resource"),
+                    ("governing orbital sustainability"),
+                    ("profit"), 
+                    ("international cooperation"),
+                    ("science and innovation"),
+                    ("national economic gains"),
+                    ("societal development"),
+                    ("diplomatic tool");
