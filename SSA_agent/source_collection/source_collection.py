@@ -45,7 +45,7 @@ def join_watchlist(name):
 def serper_search(watchlist):
     url = "https://google.serper.dev/search"
     news = []
-    for i in range(3):
+    for i in range(6):
         payload = json.dumps({
         "q": f"Space articles about: {join_watchlist(watchlist)}",
         "start": i*10,
