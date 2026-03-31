@@ -14,6 +14,6 @@ sources = pd.read_sql_query("""
                ORDER BY source_id
             ;""", connection)
 
-sources.to_csv("SSA_agent/concept_db/pairs.csv")
+sources.to_excel("SSA_agent/concept_db/pairs.xlsx", index=False)
 print(sources)
 connection.close()
