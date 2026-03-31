@@ -5,7 +5,7 @@ connection = sqlite3.connect("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agen
 
 
 sources = pd.read_sql_query("""
-            SELECT source_id, title, content FROM sources
+            SELECT source_id, title, link, content FROM sources
             ;""", connection)
 
 sources.to_excel("SSA_agent/concept_db/sources.xlsx", index=False)
