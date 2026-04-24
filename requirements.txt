@@ -7,3 +7,4 @@ seaborn>=0.13.0 # for the graphing demo
 fair-llm>=0.1 # fair package
 pytest>=8.0.0
 trafilatura>=2.0.0 # parses HTML sites
+sentencepiece>=0.2.1 # needed for translation with helsinki
