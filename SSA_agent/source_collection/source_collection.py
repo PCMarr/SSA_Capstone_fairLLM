@@ -9,6 +9,7 @@ from datetime import *; from dateutil.relativedelta import *
 from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("SERPER_API_KEY")
+DB_FILEPATH = "SSA_agent/concept_db/pair.db"
 
 def fetch_article_text(url: str, timeout: int = 15):
     text = ''
@@ -90,7 +91,7 @@ def main():
     
 
     for list in WATCHLISTS:
-        connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+        connection = sqlite3.connect(DB_FILEPATH)
         connection.execute("PRAGMA foreign_keys = ON")
         cursor = connection.cursor()
         print(f"Gathering sources about {list}")
