@@ -5,7 +5,7 @@ connection = sqlite3.connect("/home/peter-marriott/SSA_Capstone_fairLLM/SSA_agen
 
 
 sources = pd.read_sql_query("""
-            SELECT date FROM sources
+            SELECT language_code FROM sources
             ;""", connection)
 
 print(sources)

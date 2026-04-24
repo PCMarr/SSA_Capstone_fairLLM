@@ -105,7 +105,7 @@ async def main():
     connection = sqlite3.connect(database_fp)
     cursor = connection.cursor()
     cursor.execute("""
-            SELECT source_id, title, content FROM sources;
+            SELECT source_id, title, content, language_code FROM sources;
             """)
 
     rows = cursor.fetchall()
@@ -116,17 +116,20 @@ async def main():
         source_id = source[0]
         title = source[1]
         content = source[2]  # content of the source
+        language = source[3]
         try:
-            user_input = content
-            if(user_input):  # only calls LLM if the source has content
+            if(content):  # only calls LLM if the source has content
                 print(f"\n\nNext source: {title} ")
+
+                # translate content if in chinese
+                if(language == 'zh'): content = translate(content)
 
                 # outputs the source_id to a temporary file which is read by the pair storage tool to input the correct pairs
                 with open(temp_file, "w") as fp:
                     fp.write(f"{source_id}")
 
                 # Run the agent’s full Reason+Act cycle
-                agent_response = await agent.arun(user_input)
+                agent_response = await agent.arun(content)
 
         except KeyboardInterrupt:
             os.remove(temp_file)

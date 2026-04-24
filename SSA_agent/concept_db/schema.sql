@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS sources(
     content TEXT,
     source TEXT,
     date TEXT,
-    link TEXT UNIQUE
+    link TEXT UNIQUE,
+    language_code TEXT DEFAULT 'en'
 );
 
 CREATE TABLE IF NOT EXISTS actors(
