@@ -9,6 +9,7 @@ from datetime import *; from dateutil.relativedelta import *
 from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("SERPER_API_KEY")
+DB_FILEPATH = "SSA_agent/concept_db/pair.db"
 
 def fetch_article_text(url: str, timeout: int = 15):
     text = ''
@@ -90,31 +91,32 @@ def main():
     
 
     for list in WATCHLISTS:
-        connection = sqlite3.connect("SSA_agent/concept_db/pair.db")
+        connection = sqlite3.connect(DB_FILEPATH)
         connection.execute("PRAGMA foreign_keys = ON")
         cursor = connection.cursor()
         print(f"Gathering sources about {list}")
         sources = serper_search(list)
-        for source in sources:
-            source["text"] = fetch_article_text(source["link"])
-            source["date"] = date_offset(source["date"])
-            # entry = {
-            #     "title": source["title"],
-            #     "source_name":  source["source"],
-            #     "category": "News",
-            #     "published": source["date"],
-            #     "text": source["text"],
-            #     "link": source["link"]
-            # }
-            print(f"inserting {source["title"]}")
-            try:
-                cursor.execute("""
-                INSERT INTO sources (title, content, source, date, link) 
-                VALUES (?, ?, ?, ?, ?)            
-                """, (source["title"], source["text"], source["source"], source["date"], source["link"]))
-                connection.commit()
-            except:
-                pass
+        if sources:
+            for source in sources:
+                source["text"] = fetch_article_text(source["link"])
+                source["date"] = date_offset(source["date"])
+                # entry = {
+                #     "title": source["title"],
+                #     "source_name":  source["source"],
+                #     "category": "News",
+                #     "published": source["date"],
+                #     "text": source["text"],
+                #     "link": source["link"]
+                # }
+                print(f"inserting {source["title"]}")
+                try:
+                    cursor.execute("""
+                    INSERT INTO sources (title, content, source, date, link) 
+                    VALUES (?, ?, ?, ?, ?)            
+                    """, (source["title"], source["text"], source["source"], source["date"], source["link"]))
+                    connection.commit()
+                except:
+                    pass
 
         connection.close()
 
